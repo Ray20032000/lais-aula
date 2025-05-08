@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Biblioteca</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="titulo">
+        <h1>Cadastro de Livros ✧</h1>
+    </div>
+
+
+    <form action="/adicionar" method="post">
+        <input type="text" name="titulo" placeholder="Título" required>
+        <input type="text" name="autor" placeholder="Autor" required>
+        <button type="submit" class="botao">Adicionar</button>
+    </form>
+
+    <hr>
+
+    {% if livros %}
+        <ul>
+        {% for livro in livros %}
+            <li>
+                <strong>{{ livro.titulo }}</strong> - {{ livro.autor }}<br>
+                {% if livro.emprestado %}
+                    <span style="color:red;">Emprestado até {{ livro.data_devolucao }}</span>
+                    <a href="/devolver/{{ loop.index0 }}" class="emp-devl">[Devolver]</a>
+                {% else %}
+                    <a href="/emprestar/{{ loop.index0 }}" class="emp-devl">[Emprestar]</a>
+                {% endif %}
+                <br><br>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Nenhum livro cadastrado.</p>
+    {% endif %}
+
+    {% if multa %}
+        <p style="color:red;">Livro devolvido com {{ dias_atraso }} dias de atraso. Multa: R$ {{ multa }}</p>
+    {% endif %}
+</body>
+</html>
